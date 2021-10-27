@@ -14,7 +14,7 @@ defmodule AssinanteTest do
 
   describe "Testes responsaveis para cadastro de assinantes" do
     test "Deve retornar estrutura de assinante" do
-      assert %Assinante{nome: "Rafa", numero: "234", cpf: "9898"}.nome == "teste"
+      assert %Assinante{nome: "Rafa", numero: "234", cpf: "9898"}.nome == "Rafa"
     end
 
     test "Criar conta prepago" do
