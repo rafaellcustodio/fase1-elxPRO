@@ -15,6 +15,7 @@ defmodule PrepagoTest do
   describe "Funçoes de Ligacao" do
     test "Fazer uma ligacao" do
       Assinante.cadastrar("Rafael", "123", "456", :prepago)
+      Recarga.nova(DateTime.utc_now(), 30, "123")
 
     assert Prepago.fazer_chamada("123", DateTime.utc_now(), 3) ==
       {:ok, "A chamada custou 4.35 e voce tem 5.65 de creditos"}
@@ -25,6 +26,22 @@ defmodule PrepagoTest do
 
     assert Prepago.fazer_chamada("123", DateTime.utc_now(), 10) ==
       {:error, "Voce nao tem creditos para efetuar a ligacao, faca uma recarga"}
+    end
+
+  end
+
+  describe "Teste para impressao de compras" do
+    test "Deve informa valores da cota do mes" do
+      Assinante.cadastrar("Rafael", "123", "456", :prepago)
+      data = DateTime.utc_now()
+      Recarga.nova(data, 30, "123")
+      Prepago.fazer_chamada("123", data, 3)
+
+      assinante = Prepago.imprimir_conta(data.month, data.year, "123")
+
+      assert assinante.numero == "123"
+      assert Enum.count(assinante.chamadas) == 1
+      assert Enum.count(assinante.plano.recargas) == 1
     end
 
   end
